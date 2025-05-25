@@ -332,21 +332,35 @@ async function viewDonors() {
   try {
     const donors = await contract.getAllDonors();
     const output = document.getElementById("output");
-    output.innerHTML = "<h2></h2>";
-    donors.forEach(d => {
-      output.innerHTML += `
-        <div>
-          <strong>Name:</strong> ${d.name} <br/>
-          <strong>Age:</strong> ${d.age} <br/>
-          <strong>Gender:</strong> ${d.gender} <br/>
-          <strong>Medical ID:</strong> ${d.medicalId} <br/>
-          <strong>Blood Group:</strong> ${d.bloodGroup} <br/>
-          <strong>Weight:</strong> ${d.weight} kg <br/>
-          <strong>Verified:</strong> ${d.verified ? "Yes" : "No"}
-          <hr/>
-        </div>
-      `;
-    });
+    output.innerHTML = `
+      <h2></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Medical ID</th>
+            <th>Blood Group</th>
+            <th>Weight (kg)</th>
+            <th>Verified</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${donors.map(d => `
+            <tr>
+              <td>${d.name}</td>
+              <td>${d.age}</td>
+              <td>${d.gender}</td>
+              <td>${d.medicalId}</td>
+              <td>${d.bloodGroup}</td>
+              <td>${d.weight}</td>
+              <td>${d.verified ? "Yes" : "No"}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
   } catch (err) {
     console.error(err);
     alert("Failed to fetch donors.");
@@ -357,20 +371,33 @@ async function viewPatients() {
   try {
     const patients = await contract.getAllPatients();
     const output = document.getElementById("output");
-    output.innerHTML = "<h2></h2>";
-    patients.forEach(p => {
-      output.innerHTML += `
-        <div>
-          <strong>Name:</strong> ${p.name} <br/>
-          <strong>Age:</strong> ${p.age} <br/>
-          <strong>Gender:</strong> ${p.gender} <br/>
-          <strong>Medical ID:</strong> ${p.medicalId} <br/>
-          <strong>Blood Group:</strong> ${p.bloodGroup} <br/>
-          <strong>Weight:</strong> ${p.weight} kg <br/>
-          <hr/>
-        </div>
-      `;
-    });
+    output.innerHTML = `
+      <h2></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Medical ID</th>
+            <th>Blood Group</th>
+            <th>Weight (kg)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${patients.map(p => `
+            <tr>
+              <td>${p.name}</td>
+              <td>${p.age}</td>
+              <td>${p.gender}</td>
+              <td>${p.medicalId}</td>
+              <td>${p.bloodGroup}</td>
+              <td>${p.weight}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
   } catch (err) {
     console.error(err);
     alert("Failed to fetch patients.");
