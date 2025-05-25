@@ -3,217 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blockchain Blood Donation App</title>
+  <title>Blockchain Blood Donation App - Home</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
       background-color: #f4f7f8;
       color: #333;
+      text-align: center;
     }
     h1 {
-      text-align: center;
       color: #2c3e50;
     }
     nav {
-      margin-bottom: 20px;
-      text-align: center;
+      margin-top: 40px;
     }
-    nav button {
-      margin: 0 10px;
-      padding: 10px 15px;
-      font-size: 16px;
-      cursor: pointer;
+    nav a {
+      display: inline-block;
+      margin: 10px 15px;
+      padding: 15px 25px;
+      font-size: 18px;
+      text-decoration: none;
+      color: white;
       background-color: #2980b9;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-    nav button:hover {
-      background-color: #3498db;
-    }
-    section {
-      display: none;
-      max-width: 600px;
-      margin: 0 auto 30px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    section.active {
-      display: block;
-    }
-    form label {
-      display: block;
-      margin: 10px 0 5px;
-      font-weight: bold;
-    }
-    form input[type="text"],
-    form input[type="number"],
-    form select {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    form .gender-options {
-      margin: 5px 0 15px;
-    }
-    form .gender-options label {
-      font-weight: normal;
-      margin-right: 15px;
-    }
-    form button {
-      background-color: #27ae60;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    form button:hover {
-      background-color: #2ecc71;
-    }
-    #output {
-      max-width: 900px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow-x: auto;
-    }
-    .match-container {
-      display: flex;
-      justify-content: space-between;
-    }
-    .match-list {
-      width: 48%;
-      background: #ecf0f1;
-      padding: 15px;
       border-radius: 6px;
-      max-height: 400px;
-      overflow-y: auto;
+      transition: background-color 0.3s ease;
     }
-    .match-list h3 {
-      margin-top: 0;
-      text-align: center;
-      color: #34495e;
-    }
-    .match-item {
-      background: white;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    nav a:hover {
+      background-color: #3498db;
     }
   </style>
 </head>
 <body>
   <h1>Blockchain Blood Donation App</h1>
   <nav>
-    <button onclick="showSection('registerDonor')">Register Donor</button>
-    <button onclick="showSection('registerPatient')">Register Patient</button>
-    <button onclick="viewDonors()">View Donors</button>
-    <button onclick="viewPatients()">View Patients</button>
-    <button onclick="verifyPledges()">Verify Pledges</button>
-    <button onclick="bloodMatch()">Blood Match</button>
+    <a href="registerDonor.html">Register Donor</a>
+    <a href="registerPatient.html">Register Patient</a>
+    <a href="viewDonors.html">View Donors</a>
+    <a href="viewPatients.html">View Patients</a>
+    <a href="verifyPledges.html">Verify Pledges</a>
+    <a href="bloodMatch.html">Blood Match</a>
   </nav>
-
-  <section id="registerDonor">
-    <h2>Register Donor</h2>
-    <form id="donorForm" onsubmit="event.preventDefault(); registerDonor();">
-      <label for="donorName">Name</label>
-      <input type="text" id="donorName" required />
-      
-      <label for="donorAge">Age</label>
-      <input type="number" id="donorAge" required min="18" max="65" />
-      
-      <label>Gender</label>
-      <div class="gender-options">
-        <label><input type="radio" name="donorGender" value="Male" required /> Male</label>
-        <label><input type="radio" name="donorGender" value="Female" /> Female</label>
-        <label><input type="radio" name="donorGender" value="Other" /> Other</label>
-      </div>
-      
-      <label for="donorMedicalId">Medical ID</label>
-      <input type="text" id="donorMedicalId" required />
-      
-      <label for="donorBloodGroup">Blood Group</label>
-      <select id="donorBloodGroup" required>
-        <option value="">Select</option>
-        <option value="A+">A+</option>
-        <option value="A-">A-</option>
-        <option value="B+">B+</option>
-        <option value="B-">B-</option>
-        <option value="AB+">AB+</option>
-        <option value="AB-">AB-</option>
-        <option value="O+">O+</option>
-        <option value="O-">O-</option>
-      </select>
-      
-      <label for="donorWeight">Weight (kg)</label>
-      <input type="number" id="donorWeight" required min="40" max="150" />
-      
-      <button type="submit">Register Donor</button>
-    </form>
-  </section>
-
-  <section id="registerPatient">
-    <h2>Register Patient</h2>
-    <form id="patientForm" onsubmit="event.preventDefault(); registerPatient();">
-      <label for="patientName">Name</label>
-      <input type="text" id="patientName" required />
-      
-      <label for="patientAge">Age</label>
-      <input type="number" id="patientAge" required min="0" max="120" />
-      
-      <label>Gender</label>
-      <div class="gender-options">
-        <label><input type="radio" name="patientGender" value="Male" required /> Male</label>
-        <label><input type="radio" name="patientGender" value="Female" /> Female</label>
-        <label><input type="radio" name="patientGender" value="Other" /> Other</label>
-      </div>
-      
-      <label for="patientMedicalId">Medical ID</label>
-      <input type="text" id="patientMedicalId" required />
-      
-      <label for="patientBloodGroup">Blood Group</label>
-      <select id="patientBloodGroup" required>
-        <option value="">Select</option>
-        <option value="A+">A+</option>
-        <option value="A-">A-</option>
-        <option value="B+">B+</option>
-        <option value="B-">B-</option>
-        <option value="AB+">AB+</option>
-        <option value="AB-">AB-</option>
-        <option value="O+">O+</option>
-        <option value="O-">O-</option>
-      </select>
-      
-      <label for="patientWeight">Weight (kg)</label>
-      <input type="number" id="patientWeight" required min="0" max="200" />
-      
-      <button type="submit">Register Patient</button>
-    </form>
-  </section>
-
-  <div id="output"></div>
-
-  <script src="ethers.min.js"></script>
-  <script src="app.js"></script>
-
-  <script>
-    function showSection(sectionId) {
-      const sections = document.querySelectorAll('section');
-      sections.forEach(s => s.classList.remove('active'));
-      const section = document.getElementById(sectionId);
-      if (section) section.classList.add('active');
-      document.getElementById('output').innerHTML = '';
-    }
-  </script>
 </body>
 </html>

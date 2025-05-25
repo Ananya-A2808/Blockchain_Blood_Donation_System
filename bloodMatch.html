@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blood Match - Blockchain Blood Donation App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f7f8;
+      color: #333;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    nav a {
+      margin: 0 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      text-decoration: none;
+      color: white;
+      background-color: #2980b9;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    nav a:hover {
+      background-color: #3498db;
+    }
+    #bloodGroupSelect {
+      margin-top: 20px;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #output {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow-x: auto;
+      text-align: left;
+    }
+    .match-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .match-list {
+      flex: 1;
+    }
+    .match-item {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Blockchain Blood Donation App</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="registerDonor.html">Register Donor</a>
+    <a href="registerPatient.html">Register Patient</a>
+    <a href="viewDonors.html">View Donors</a>
+    <a href="viewPatients.html">View Patients</a>
+    <a href="verifyPledges.html">Verify Pledges</a>
+  </nav>
+
+  <h2>Blood Match</h2>
+  <label for="bloodGroupSelect">Select Blood Group:</label>
+  <select id="bloodGroupSelect">
+    <option value="">All</option>
+    <option value="A+">A+</option>
+    <option value="A-">A-</option>
+    <option value="B+">B+</option>
+    <option value="B-">B-</option>
+    <option value="AB+">AB+</option>
+    <option value="AB-">AB-</option>
+    <option value="O+">O+</option>
+    <option value="O-">O-</option>
+  </select>
+  <div id="output">Loading...</div>
+
+  <script src="ethers.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    window.contractReady.then(() => {
+      loadAllMatches();
+
+      document.getElementById('bloodGroupSelect').addEventListener('change', () => {
+        filterMatches();
+      });
+    }).catch(err => {
+      console.error("Contract initialization failed:", err);
+      alert("Failed to initialize contract. Please refresh and try again.");
+    });
+
+    async function loadAllMatches() {
+      try {
+        const patients = await contract.getAllPatients();
+        const donors = await contract.getAllDonors();
+        window.allPatients = patients;
+        window.allDonors = donors;
+        displayMatches(patients, donors);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('output').textContent = "Failed to load matches.";
+      }
+    }
+
+    function displayMatches(patients, donors) {
+      const output = document.getElementById('output');
+      output.innerHTML = "<h2>Blood Match Results</h2>";
+      output.innerHTML += '<div class="match-container">';
+      output.innerHTML += '<div class="match-list"><h3>Patients</h3>';
+      if (patients.length === 0) {
+        output.innerHTML += "<p>No patients found.</p>";
+      } else {
+        patients.forEach(p => {
+          output.innerHTML += `
+            <div class="match-item">
+              <strong>Name:</strong> ${p.name}<br/>
+              <strong>Age:</strong> ${p.age}<br/>
+              <strong>Gender:</strong> ${p.gender}<br/>
+              <strong>Medical ID:</strong> ${p.medicalId}<br/>
+              <strong>Blood Group:</strong> ${p.bloodGroup}<br/>
+              <strong>Weight:</strong> ${p.weight} kg
+            </div>
+          `;
+        });
+      }
+      output.innerHTML += '</div>';
+
+      output.innerHTML += '<div class="match-list"><h3>Donors</h3>';
+      if (donors.length === 0) {
+        output.innerHTML += "<p>No verified donors found.</p>";
+      } else {
+        donors.forEach(d => {
+          output.innerHTML += `
+            <div class="match-item">
+              <strong>Name:</strong> ${d.name}<br/>
+              <strong>Age:</strong> ${d.age}<br/>
+              <strong>Gender:</strong> ${d.gender}<br/>
+              <strong>Medical ID:</strong> ${d.medicalId}<br/>
+              <strong>Blood Group:</strong> ${d.bloodGroup}<br/>
+              <strong>Weight:</strong> ${d.weight} kg
+            </div>
+          `;
+        });
+      }
+      output.innerHTML += '</div></div>';
+    }
+
+    function filterMatches() {
+      const selectedGroup = document.getElementById('bloodGroupSelect').value;
+      let filteredPatients = window.allPatients || [];
+      let filteredDonors = window.allDonors || [];
+
+      if (selectedGroup) {
+        filteredPatients = filteredPatients.filter(p => p.bloodGroup === selectedGroup);
+        filteredDonors = filteredDonors.filter(d => d.bloodGroup === selectedGroup && d.verified);
+      } else {
+        // Show all donors but only verified ones
+        filteredDonors = filteredDonors.filter(d => d.verified);
+      }
+
+      displayMatches(filteredPatients, filteredDonors);
+    }
+  </script>
+</body>
+</html>

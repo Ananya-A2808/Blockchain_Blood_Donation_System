@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Patients - Blockchain Blood Donation App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f7f8;
+      color: #333;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    nav a {
+      margin: 0 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      text-decoration: none;
+      color: white;
+      background-color: #2980b9;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    nav a:hover {
+      background-color: #3498db;
+    }
+    #output {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+    .patient-item {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .patient-item strong {
+      display: inline-block;
+      width: 120px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Blockchain Blood Donation App</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="registerDonor.html">Register Donor</a>
+    <a href="registerPatient.html">Register Patient</a>
+    <a href="viewDonors.html">View Donors</a>
+    <a href="verifyPledges.html">Verify Pledges</a>
+    <a href="bloodMatch.html">Blood Match</a>
+  </nav>
+
+  <section id="patientsList">
+    <h2>Patients List</h2>
+    <div id="output">Loading patients...</div>
+  </section>
+
+  <script src="ethers.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    window.contractReady.then(() => {
+      viewPatients();
+    }).catch(err => {
+      console.error("Contract initialization failed:", err);
+      alert("Failed to initialize contract. Please refresh and try again.");
+    });
+  </script>
+</body>
+</html>

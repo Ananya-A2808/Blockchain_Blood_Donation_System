@@ -260,16 +260,24 @@ let contract;
 let provider;
 let signer;
 
-window.addEventListener("load", async () => {
+window.contractReady = new Promise(async (resolve, reject) => {
   if (typeof window.ethereum === "undefined") {
     alert("Please install MetaMask!");
+    reject(new Error("MetaMask not installed"));
     return;
   }
 
-  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-  await provider.send("eth_requestAccounts", []);
-  signer = provider.getSigner();
-  contract = new ethers.Contract(contractAddress, abi, signer);
+  try {
+    provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+    contract = new ethers.Contract(contractAddress, abi, signer);
+    resolve();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to initialize contract.");
+    reject(err);
+  }
 });
 
 async function registerDonor() {
@@ -324,7 +332,7 @@ async function viewDonors() {
   try {
     const donors = await contract.getAllDonors();
     const output = document.getElementById("output");
-    output.innerHTML = "<h2>Donors List</h2>";
+    output.innerHTML = "<h2></h2>";
     donors.forEach(d => {
       output.innerHTML += `
         <div>
@@ -349,7 +357,7 @@ async function viewPatients() {
   try {
     const patients = await contract.getAllPatients();
     const output = document.getElementById("output");
-    output.innerHTML = "<h2>Patients List</h2>";
+    output.innerHTML = "<h2></h2>";
     patients.forEach(p => {
       output.innerHTML += `
         <div>
@@ -370,16 +378,25 @@ async function viewPatients() {
 }
 
 async function verifyPledges() {
-  const medicalId = prompt("Enter Medical ID to verify pledge:");
-  if (!medicalId) return;
+  // Deprecated function, replaced by verifyPledgeFromInput
+}
+
+async function verifyPledgeFromInput() {
+  const medicalId = document.getElementById("medicalIdInput").value.trim();
+  const resultDiv = document.getElementById("verifyResult");
+  resultDiv.textContent = "";
+  if (!medicalId) {
+    resultDiv.textContent = "Please enter a Medical ID.";
+    return;
+  }
 
   try {
     const tx = await contract.verifyPledge(medicalId);
     await tx.wait();
-    alert("Pledge verified successfully!");
+    resultDiv.textContent = "Pledge verified successfully!";
   } catch (err) {
     console.error(err);
-    alert("Failed to verify pledge.");
+    resultDiv.textContent = "Failed to verify pledge.";
   }
 }
 
